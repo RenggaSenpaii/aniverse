@@ -1,6 +1,8 @@
 import Link from "next/link"
 import AnimeSearch from "../components/AnimeSearch"
 import Navbar from "../components/Navbar"
+import ContinueWatching from "../components/ContinueWatching"
+import MotionWrapper from "../components/MotionWrapper"
 
 type Anime = {
   mal_id: number
@@ -23,46 +25,16 @@ type HomeProps = {
 }
 
 const genres = [
-  {
-    id: 1,
-    name: "Action"
-  },
-  {
-    id: 2,
-    name: "Adventure"
-  },
-  {
-    id: 4,
-    name: "Comedy"
-  },
-  {
-    id: 8,
-    name: "Drama"
-  },
-  {
-    id: 10,
-    name: "Fantasy"
-  },
-  {
-    id: 22,
-    name: "Romance"
-  },
-  {
-    id: 24,
-    name: "Sci-Fi"
-  },
-  {
-    id: 36,
-    name: "Slice of Life"
-  },
-  {
-    id: 40,
-    name: "Psychological"
-  },
-  {
-    id: 37,
-    name: "Supernatural"
-  }
+  { id: 1, name: "Action" },
+  { id: 2, name: "Adventure" },
+  { id: 4, name: "Comedy" },
+  { id: 8, name: "Drama" },
+  { id: 10, name: "Fantasy" },
+  { id: 22, name: "Romance" },
+  { id: 24, name: "Sci-Fi" },
+  { id: 36, name: "Slice of Life" },
+  { id: 40, name: "Psychological" },
+  { id: 37, name: "Supernatural" }
 ]
 
 async function getAnime(
@@ -87,6 +59,28 @@ async function getAnime(
   return data.data
 }
 
+async function getSeasonNow() {
+
+  const res = await fetch(
+    "https://api.jikan.moe/v4/seasons/now"
+  )
+
+  const data = await res.json()
+
+  return data.data.slice(0, 10)
+}
+
+async function getUpcomingAnime() {
+
+  const res = await fetch(
+    "https://api.jikan.moe/v4/seasons/upcoming"
+  )
+
+  const data = await res.json()
+
+  return data.data.slice(0, 10)
+}
+
 export default async function Home({
   searchParams,
 }: HomeProps) {
@@ -105,6 +99,12 @@ export default async function Home({
       selectedGenre
     )
 
+  const seasonNow: Anime[] =
+    await getSeasonNow()
+
+  const upcomingAnime: Anime[] =
+    await getUpcomingAnime()
+
   const featuredAnime =
     animeList[0]
 
@@ -116,12 +116,12 @@ export default async function Home({
 
       <section
         id="home"
-        className="max-w-7xl mx-auto px-6 py-10"
+        className="max-w-7xl mx-auto px-4 md:px-6 py-10"
       >
 
         {featuredAnime && (
 
-          <div className="relative min-h-[700px] rounded-3xl mb-20">
+          <div className="relative min-h-[700px] rounded-[40px] mb-20 overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
 
             <img
               src={featuredAnime.images.jpg.large_image_url}
@@ -129,9 +129,9 @@ export default async function Home({
               className="absolute inset-0 w-full h-full object-cover rounded-3xl"
             />
 
-            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-black/40 rounded-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/30 backdrop-blur-[2px]" />
 
-            <div className="relative z-10 flex items-center min-h-[700px] px-6 md:px-14 py-20">
+            <div className="relative z-10 flex items-center min-h-[700px] animate-fade-in px-6 md:px-14 py-20">
 
               <div className="max-w-3xl">
 
@@ -141,7 +141,7 @@ export default async function Home({
 
                 </p>
 
-                <h2 className="text-5xl md:text-7xl font-black leading-tight mb-8 break-words">
+                <h2 className="text-4xl md:text-7xl font-black leading-tight mb-8 break-words">
 
                   {featuredAnime.title}
 
@@ -173,208 +173,170 @@ export default async function Home({
 
         )}
 
-        <div
-          id="trending"
-          className="flex items-center justify-between mb-10"
-        >
+        {/* Trending */}
 
-          <h3 className="text-3xl font-bold">
+        <MotionWrapper>
 
-            {selectedGenre
-              ? `${genres.find(
-                  (g) =>
-                    g.id.toString() === selectedGenre
-                )?.name} Anime`
-              : "Trending Anime"}
-
-          </h3>
-
-          <a
-            href="#top-anime"
-            className="border border-zinc-700 px-5 py-2 rounded-xl hover:bg-zinc-900 transition"
+          <div
+            id="trending"
+            className="flex items-center justify-between mb-10"
           >
 
-            View More
+            <h3 className="text-3xl font-bold">
 
-          </a>
+              {selectedGenre
+                ? `${genres.find(
+                    (g) =>
+                      g.id.toString() === selectedGenre
+                  )?.name} Anime`
+                : "Trending Anime"}
 
-        </div>
+            </h3>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-24">
+          </div>
 
-          {animeList.map((anime) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-24">
 
-            <Link
-              href={`/anime/${anime.mal_id}`}
-              key={anime.mal_id}
-              className="group"
-            >
-
-              <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
-
-                <img
-                  src={anime.images.jpg.image_url}
-                  alt={anime.title}
-                  className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
-                />
-
-              </div>
-
-              <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
-
-                {anime.title}
-
-              </h4>
-
-              <p className="text-zinc-400 text-sm">
-
-                ⭐ {anime.score || "N/A"}
-
-              </p>
-
-            </Link>
-
-          ))}
-
-        </div>
-
-        <section
-          id="top-anime"
-          className="mb-24"
-        >
-
-          <h3 className="text-3xl font-bold mb-10">
-            Top Anime
-          </h3>
-
-          <div className="grid md:grid-cols-2 gap-6">
-
-            {animeList.slice(0, 6).map((anime) => (
+            {animeList.map((anime) => (
 
               <Link
                 href={`/anime/${anime.mal_id}`}
                 key={anime.mal_id}
-                className="flex items-center gap-6 bg-zinc-900 border border-zinc-800 rounded-3xl p-5 hover:border-red-500 transition"
+                className="group transition duration-300 hover:scale-[1.03]"
               >
 
-                <img
-                  src={anime.images.jpg.image_url}
-                  alt={anime.title}
-                  className="w-28 h-40 object-cover rounded-2xl"
-                />
+                <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500 group-hover:shadow-red-500/20 transition duration-300">
 
-                <div>
+                  <img
+                    src={anime.images.jpg.image_url}
+                    alt={anime.title}
+                    className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                  />
 
-                  <h4 className="text-2xl font-bold mb-3">
+                </div>
+
+                <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
+
+                  {anime.title}
+
+                </h4>
+
+                <p className="text-zinc-400 text-sm">
+
+                  ⭐ {anime.score || "N/A"}
+
+                </p>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        </MotionWrapper>
+
+        {/* Continue Watching */}
+
+        <MotionWrapper>
+
+          <ContinueWatching />
+
+        </MotionWrapper>
+
+        {/* Currently Airing */}
+
+        <MotionWrapper>
+
+          <section className="mb-24">
+
+            <h3 className="text-3xl font-bold mb-10">
+
+              Currently Airing
+
+            </h3>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+
+              {seasonNow.map((anime) => (
+
+                <Link
+                  href={`/anime/${anime.mal_id}`}
+                  key={anime.mal_id}
+                  className="group transition duration-300 hover:scale-[1.03]"
+                >
+
+                  <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500">
+
+                    <img
+                      src={anime.images.jpg.image_url}
+                      alt={anime.title}
+                      className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                    />
+
+                  </div>
+
+                  <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
 
                     {anime.title}
 
                   </h4>
 
-                  <p className="text-zinc-400 mb-4">
+                </Link>
 
-                    ⭐ {anime.score || "N/A"}
+              ))}
 
-                  </p>
+            </div>
 
-                  <p className="text-zinc-500 line-clamp-3">
+          </section>
 
-                    {anime.synopsis}
+        </MotionWrapper>
+                {/* Upcoming Anime */}
 
-                  </p>
+        <MotionWrapper>
 
-                </div>
+          <section className="mb-24">
 
-              </Link>
+            <h3 className="text-3xl font-bold mb-10">
 
-            ))}
+              Upcoming Anime
 
-          </div>
+            </h3>
 
-        </section>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 
-        <section
-          id="genres"
-          className="mb-24"
-        >
+              {upcomingAnime.map((anime) => (
 
-          <h3 className="text-3xl font-bold mb-10">
-            Popular Genres
-          </h3>
+                <Link
+                  href={`/anime/${anime.mal_id}`}
+                  key={anime.mal_id}
+                  className="group transition duration-300 hover:scale-[1.03]"
+                >
 
-          <div className="flex flex-wrap gap-4">
+                  <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500">
 
-            {genres.map((genre) => (
+                    <img
+                      src={anime.images.jpg.image_url}
+                      alt={anime.title}
+                      className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                    />
 
-              <Link
-                href={`/?genre=${genre.id}&page=1`}
-                key={genre.id}
-                className={`px-6 py-4 rounded-2xl border transition ${
-                  selectedGenre ===
-                  genre.id.toString()
-                    ? "bg-red-500 border-red-500 text-white"
-                    : "bg-zinc-900 border-zinc-800 hover:border-red-500 hover:bg-zinc-800"
-                }`}
-              >
+                  </div>
 
-                {genre.name}
+                  <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
 
-              </Link>
+                    {anime.title}
 
-            ))}
+                  </h4>
 
-            <Link
-              href="/"
-              className="px-6 py-4 rounded-2xl bg-zinc-800 hover:bg-zinc-700 transition"
-            >
+                </Link>
 
-              Reset
+              ))}
 
-            </Link>
+            </div>
 
-          </div>
+          </section>
 
-        </section>
-
-        <div className="flex items-center justify-center gap-5 mt-20">
-
-          {currentPage > 1 && (
-
-            <Link
-              href={`/?page=${currentPage - 1}${
-                selectedGenre
-                  ? `&genre=${selectedGenre}`
-                  : ""
-              }`}
-              className="px-6 py-3 rounded-2xl border border-zinc-800 hover:bg-zinc-900 transition"
-            >
-
-              Previous
-
-            </Link>
-
-          )}
-
-          <div className="px-6 py-3 rounded-2xl bg-zinc-900">
-
-            Page {currentPage}
-
-          </div>
-
-          <Link
-            href={`/?page=${currentPage + 1}${
-              selectedGenre
-                ? `&genre=${selectedGenre}`
-                : ""
-            }`}
-            className="px-6 py-3 rounded-2xl border border-zinc-800 hover:bg-zinc-900 transition"
-          >
-
-            Next
-
-          </Link>
-
-        </div>
+        </MotionWrapper>
 
       </section>
 

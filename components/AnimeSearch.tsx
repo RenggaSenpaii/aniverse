@@ -1,7 +1,7 @@
 "use client"
 
-import { Search } from "lucide-react"
-import { useState } from "react"
+import { Search, Loader2, X } from "lucide-react"
+import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
 
 type Anime = {
@@ -16,30 +16,101 @@ type Anime = {
 
 export default function AnimeSearch() {
 
-  const [query, setQuery] = useState("")
-  const [results, setResults] = useState<Anime[]>([])
+  const [query, setQuery] =
+    useState("")
 
-  async function searchAnime(value: string) {
+  const [results, setResults] =
+    useState<Anime[]>([])
 
-    setQuery(value)
+  const [loading, setLoading] =
+    useState(false)
 
-    if (!value) {
-      setResults([])
-      return
+  const searchRef =
+    useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+
+    const handler = setTimeout(() => {
+
+      async function fetchAnime() {
+
+        if (!query.trim()) {
+
+          setResults([])
+          return
+        }
+
+        setLoading(true)
+
+        try {
+
+          const res = await fetch(
+            `https://api.jikan.moe/v4/anime?q=${query}`
+          )
+
+          const data = await res.json()
+
+          setResults(
+            data.data.slice(0, 5)
+          )
+
+        } catch {
+
+          setResults([])
+
+        } finally {
+
+          setLoading(false)
+        }
+      }
+
+      fetchAnime()
+
+    }, 400)
+
+    return () =>
+      clearTimeout(handler)
+
+  }, [query])
+
+  useEffect(() => {
+
+    function handleClickOutside(
+      event: MouseEvent
+    ) {
+
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(
+          event.target as Node
+        )
+      ) {
+
+        setResults([])
+      }
     }
 
-    const res = await fetch(
-      `https://api.jikan.moe/v4/anime?q=${value}`
+    document.addEventListener(
+      "mousedown",
+      handleClickOutside
     )
 
-    const data = await res.json()
+    return () => {
 
-    setResults(data.data.slice(0, 5))
-  }
+      document.removeEventListener(
+        "mousedown",
+        handleClickOutside
+      )
+    }
+
+  }, [])
 
   return (
 
-    <div className="max-w-xl relative">
+    <div
+      ref={searchRef}
+      className="max-w-xl relative"
+    >
 
       <Search
         className="absolute left-5 top-5 text-zinc-500"
@@ -51,20 +122,57 @@ export default function AnimeSearch() {
         placeholder="Search anime..."
         value={query}
         onChange={(e) =>
-          searchAnime(e.target.value)
+          setQuery(e.target.value)
         }
-        className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 pl-14 pr-5 outline-none focus:border-white transition"
+        className="w-full bg-zinc-900 border border-zinc-800 rounded-2xl py-4 pl-14 pr-14 outline-none focus:border-red-500 transition"
       />
+
+      {/* Loading */}
+
+      {loading && (
+
+        <Loader2
+          className="absolute right-5 top-5 animate-spin text-zinc-500"
+          size={20}
+        />
+
+      )}
+
+      {/* Clear */}
+
+      {!loading && query && (
+
+        <button
+          onClick={() => {
+
+            setQuery("")
+            setResults([])
+          }}
+          className="absolute right-5 top-5 text-zinc-500 hover:text-white transition"
+        >
+
+          <X size={20} />
+
+        </button>
+
+      )}
+
+      {/* Results */}
 
       {results.length > 0 && (
 
-        <div className="absolute top-16 w-full bg-zinc-950 border border-zinc-800 rounded-2xl overflow-hidden z-50">
+        <div className="absolute top-16 w-full bg-black/70 backdrop-blur-2xl border border-white/10 rounded-3xl overflow-hidden z-50 shadow-2xl shadow-black/40">
 
           {results.map((anime) => (
 
             <Link
               href={`/anime/${anime.mal_id}`}
               key={anime.mal_id}
+              onClick={() => {
+
+                setResults([])
+                setQuery("")
+              }}
               className="flex items-center gap-4 p-4 hover:bg-zinc-900 transition"
             >
 
@@ -74,7 +182,7 @@ export default function AnimeSearch() {
                 className="w-14 h-20 object-cover rounded-lg"
               />
 
-              <p className="font-medium">
+              <p className="font-medium line-clamp-2">
 
                 {anime.title}
 
@@ -87,6 +195,24 @@ export default function AnimeSearch() {
         </div>
 
       )}
+
+      {/* No Result */}
+
+      {
+
+        !loading &&
+        query &&
+        results.length === 0 && (
+
+          <div className="absolute top-16 w-full bg-zinc-950 border border-zinc-800 rounded-2xl p-5 text-zinc-500 z-50">
+
+            No anime found.
+
+          </div>
+
+        )
+
+      }
 
     </div>
   )
