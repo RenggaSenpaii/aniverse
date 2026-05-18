@@ -67,7 +67,7 @@ async function getSeasonNow() {
 
   const data = await res.json()
 
-  return data.data.slice(0, 10)
+  return data.data.slice(0, 5)
 }
 
 async function getUpcomingAnime() {
@@ -78,7 +78,7 @@ async function getUpcomingAnime() {
 
   const data = await res.json()
 
-  return data.data.slice(0, 10)
+  return data.data.slice(0, 5)
 }
 
 export default async function Home({
@@ -195,7 +195,7 @@ export default async function Home({
 
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8 mb-24">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-24">
 
             {animeList.map((anime) => (
 
@@ -333,6 +333,164 @@ export default async function Home({
               ))}
 
             </div>
+        
+                {/* Top Anime */}
+
+        <MotionWrapper>
+
+          <section
+            id="top-anime"
+            className="mb-24"
+          >
+
+            <h3 className="text-3xl font-bold mb-10">
+
+              Top Anime
+
+            </h3>
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+              {animeList
+                .slice(0, 6)
+                .map((anime, index) => (
+
+                <Link
+                  href={`/anime/${anime.mal_id}`}
+                  key={`${anime.mal_id}-${index}`}
+                  className="flex items-center gap-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-[30px] p-5 hover:border-red-500 hover:bg-white/10 transition duration-500 shadow-xl shadow-black/30"
+                >
+
+                  <img
+                    src={anime.images.jpg.image_url}
+                    alt={anime.title}
+                    className="w-28 h-40 object-cover rounded-2xl"
+                  />
+
+                  <div>
+
+                    <h4 className="text-2xl font-bold mb-3">
+
+                      {anime.title}
+
+                    </h4>
+
+                    <p className="text-zinc-400 mb-4">
+
+                      ⭐ {anime.score || "N/A"}
+
+                    </p>
+
+                    <p className="text-zinc-500 line-clamp-3">
+
+                      {anime.synopsis}
+
+                    </p>
+
+                  </div>
+
+                </Link>
+
+              ))}
+
+            </div>
+
+          </section>
+
+        </MotionWrapper>
+
+        {/* Genres */}
+
+        <MotionWrapper>
+
+          <section
+            id="genres"
+            className="mb-24"
+          >
+
+            <h3 className="text-3xl font-bold mb-10">
+
+              Popular Genres
+
+            </h3>
+
+            <div className="flex flex-wrap gap-4">
+
+              {genres.map((genre) => (
+
+                <Link
+                  href={`/?genre=${genre.id}&page=1`}
+                  key={genre.id}
+                  className={`px-6 py-4 rounded-2xl border transition ${
+                    selectedGenre ===
+                    genre.id.toString()
+                      ? "bg-red-500 border-red-500 text-white"
+                      : "bg-white/5 backdrop-blur-md border-white/10 hover:border-red-500 hover:bg-white/10"
+                  }`}
+                >
+
+                  {genre.name}
+
+                </Link>
+
+              ))}
+
+              <Link
+                href="/"
+                className="px-6 py-4 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition"
+              >
+
+                Reset
+
+              </Link>
+
+            </div>
+
+          </section>
+
+        </MotionWrapper>
+
+        {/* Pagination */}
+
+        <div className="flex items-center justify-center gap-5 mt-20">
+
+          {currentPage > 1 && (
+
+            <Link
+              href={`/?page=${currentPage - 1}${
+                selectedGenre
+                  ? `&genre=${selectedGenre}`
+                  : ""
+              }`}
+              className="px-6 py-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition"
+            >
+
+              Previous
+
+            </Link>
+
+          )}
+
+          <div className="px-6 py-3 rounded-2xl bg-white/5 backdrop-blur-md border border-white/10">
+
+            Page {currentPage}
+
+          </div>
+
+          <Link
+            href={`/?page=${currentPage + 1}${
+              selectedGenre
+                ? `&genre=${selectedGenre}`
+                : ""
+            }`}
+            className="px-6 py-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md hover:bg-white/10 transition"
+          >
+
+            Next
+
+          </Link>
+
+        </div>
 
           </section>
 
