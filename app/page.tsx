@@ -3,6 +3,7 @@ import AnimeSearch from "../components/AnimeSearch"
 import Navbar from "../components/Navbar"
 import ContinueWatching from "../components/ContinueWatching"
 import MotionWrapper from "../components/MotionWrapper"
+import Image from "next/image"
 
 type Anime = {
   mal_id: number
@@ -123,10 +124,13 @@ export default async function Home({
 
           <div className="relative min-h-[700px] rounded-[40px] mb-20 overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
 
-            <img
+            <Image
               src={featuredAnime.images.jpg.large_image_url}
               alt={featuredAnime.title}
               className="absolute inset-0 w-full h-full object-cover rounded-3xl"
+              width={1200}
+              height={700}
+              priority
             />
 
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/30 backdrop-blur-[2px]" />
@@ -207,10 +211,12 @@ export default async function Home({
 
                 <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500 group-hover:shadow-red-500/20 transition duration-300">
 
-                  <img
+                  <Image
                     src={anime.images.jpg.image_url}
                     alt={anime.title}
                     className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                    width={500}
+                    height={700}
                   />
 
                 </div>
@@ -267,10 +273,12 @@ export default async function Home({
 
                   <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500">
 
-                    <img
+                    <Image
                       src={anime.images.jpg.image_url}
                       alt={anime.title}
                       className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                      width={500}
+                      height={700}
                     />
 
                   </div>
@@ -314,10 +322,12 @@ export default async function Home({
 
                   <div className="overflow-hidden rounded-3xl mb-4 bg-white/5 backdrop-blur-md border border-white/10 shadow-xl shadow-black/30 group-hover:shadow-red-500/20 transition duration-500">
 
-                    <img
+                    <Image
                       src={anime.images.jpg.image_url}
                       alt={anime.title}
                       className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                      width={500}
+                      height={700}
                     />
 
                   </div>
@@ -361,10 +371,12 @@ export default async function Home({
                   className="flex items-center gap-6 bg-white/5 backdrop-blur-md border border-white/10 rounded-[30px] p-5 hover:border-red-500 hover:bg-white/10 transition duration-500 shadow-xl shadow-black/30"
                 >
 
-                  <img
+                  <Image
                     src={anime.images.jpg.image_url}
                     alt={anime.title}
                     className="w-28 h-40 object-cover rounded-2xl"
+                    width={500}
+                    height={700}
                   />
 
                   <div>

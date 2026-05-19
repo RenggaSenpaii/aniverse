@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabase"
 import Link from "next/link"
+import Image from "next/image"
 
 type Favorite = {
   id: number
@@ -196,10 +197,12 @@ export default function ProfilePage() {
 
                     <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
 
-                      <img
+                      <Image
                         src={anime.image}
                         alt={anime.title}
                         className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                        width={500}
+                        height={700}
                       />
 
                     </div>
@@ -256,10 +259,12 @@ export default function ProfilePage() {
 
                     <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
 
-                      <img
+                      <Image
                         src={anime.image}
                         alt={anime.title}
                         className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                        width={500}
+                        height={700}
                       />
 
                     </div>

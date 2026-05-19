@@ -2,6 +2,7 @@ import Link from "next/link"
 import FavoriteButton from "../../../components/FavoriteButton"
 import Synopsis from "../../../components/Synopsis"
 import SaveContinueWatching from "../../../components/SaveContinueWatching"
+import Image from "next/image"
 
 type AnimeDetail = {
   mal_id: number
@@ -39,6 +40,14 @@ type Character = {
       }
     }
   }
+
+  voice_actors: {
+    person: {
+      name: string
+    }
+
+    language: string
+  }[]
 }
 
 type Recommendation = {
@@ -160,10 +169,13 @@ export default async function AnimePage({
 
             <div>
 
-              <img
+              <Image
                 src={anime.images.jpg.large_image_url}
                 alt={anime.title}
                 className="rounded-3xl w-full"
+                width={500}
+                height={700}
+                priority
               />
 
             </div>
@@ -261,46 +273,88 @@ export default async function AnimePage({
 
           }
 
-          {/* Characters */}
+          {/* Characters & Voice Actors */}
 
-          <section className="mt-24">
+<section className="mt-24">
 
-            <h2 className="text-3xl font-black mb-10">
+  <h2 className="text-3xl font-black mb-10">
 
-              Characters
+    Characters & Voice Actors
 
-            </h2>
+  </h2>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
+  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-6">
 
-              {characters.map((item, index) => (
+    {characters.map((item, index) => (
 
-                <div
-                  key={`${item.character.mal_id}-${index}`}
-                  className="text-center"
-                >
+      <div
+        key={`${item.character.mal_id}-${index}`}
+        className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden shadow-xl shadow-black/20 hover:border-red-500 transition duration-300"
+      >
 
-                  <img
-                    src={
-                      item.character.images.jpg.image_url
-                    }
-                    alt={item.character.name}
-                    className="w-full h-40 object-cover rounded-2xl mb-3"
-                  />
+        <Image
+          src={
+            item.character.images.jpg.image_url
+          }
+          alt={item.character.name}
+          className="w-full h-52 object-cover"
+          width={300}
+          height={300}
+        />
 
-                  <p className="text-sm font-medium line-clamp-2">
+        <div className="p-4">
 
-                    {item.character.name}
+          <h3 className="font-bold text-sm line-clamp-2 mb-3">
 
-                  </p>
+            {item.character.name}
 
-                </div>
+          </h3>
 
-              ))}
+          {
 
-            </div>
+            item.voice_actors?.[0] && (
 
-          </section>
+              <div>
+
+                <p className="text-xs text-zinc-500 mb-1">
+
+                  Voice Actor
+
+                </p>
+
+                <p className="text-sm text-red-400 line-clamp-2">
+
+                  {
+                    item.voice_actors[0]
+                      .person.name
+                  }
+
+                </p>
+
+                <p className="text-xs text-zinc-500 mt-1">
+
+                  {
+                    item.voice_actors[0]
+                      .language
+                  }
+
+                </p>
+
+              </div>
+
+            )
+
+          }
+
+        </div>
+
+      </div>
+
+    ))}
+
+  </div>
+
+</section>
 
           {/* Recommendations */}
 
@@ -324,12 +378,14 @@ export default async function AnimePage({
 
                   <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
 
-                    <img
+                    <Image
                       src={
                         anime.entry.images.jpg.image_url
                       }
                       alt={anime.entry.title}
                       className="w-full h-[320px] object-cover group-hover:scale-105 transition duration-300"
+                      width={500}
+                      height={700}
                     />
 
                   </div>

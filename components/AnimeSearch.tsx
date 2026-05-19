@@ -3,6 +3,7 @@
 import { Search, Loader2, X } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 
 type Anime = {
   mal_id: number
@@ -176,10 +177,12 @@ export default function AnimeSearch() {
               className="flex items-center gap-4 p-4 hover:bg-zinc-900 transition"
             >
 
-              <img
+              <Image
                 src={anime.images.jpg.image_url}
                 alt={anime.title}
                 className="w-14 h-20 object-cover rounded-lg"
+                width={100}
+                height={150}
               />
 
               <p className="font-medium line-clamp-2">

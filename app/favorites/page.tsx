@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { supabase } from "../../lib/supabase"
 import Link from "next/link"
+import Image from "next/image"
 
 
 export default function FavoritesPage() {
@@ -38,6 +39,14 @@ export default function FavoritesPage() {
     <main className="min-h-screen bg-black text-white px-6 py-16">
 
       <div className="max-w-7xl mx-auto">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-3 mb-10 bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 px-5 py-3 rounded-2xl transition duration-300 shadow-lg shadow-black/20"
+        >
+
+          ← Back to Home
+
+        </Link>
 
         <h1 className="text-5xl font-black mb-14">
           Your Favorites ❤️
@@ -55,10 +64,12 @@ export default function FavoritesPage() {
 
               <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
 
-                <img
+                <Image
                   src={anime.image}
                   alt={anime.title}
                   className="w-full h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                  width={500}
+                  height={700}
                 />
 
               </div>

@@ -2,6 +2,7 @@
 
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import Image from "next/image"
 
 type Anime = {
   mal_id: number
@@ -54,10 +55,12 @@ export default function ContinueWatching() {
 
             <div className="overflow-hidden rounded-2xl mb-4 bg-zinc-900">
 
-              <img
+              <Image
                 src={anime.image}
                 alt={anime.title}
                 className="w-full h-[320px] md:h-[420px] object-cover group-hover:scale-105 transition duration-300"
+                width={500}
+                height={700}
               />
 
             </div>
