@@ -6,12 +6,41 @@ import Image from "next/image"
 
 type AnimeDetail = {
   mal_id: number
+
   title: string
   title_english: string
+  title_japanese: string
+
   synopsis: string
+
   score: number
+  scored_by: number
+
+  rank: number
+  popularity: number
+  members: number
+  favorites: number
+
   episodes: number
   status: string
+
+  duration: string
+  rating: string
+  source: string
+  season: string
+  year: number
+
+  type: string
+
+  studios: {
+    mal_id: number
+    name: string
+  }[]
+
+  licensors: {
+    mal_id: number
+    name: string
+  }[]
 
   trailer?: {
     youtube_id?: string
@@ -237,6 +266,262 @@ export default async function AnimePage({
                   "No synopsis available."
                 }
               />
+              <div className="mt-10 grid md:grid-cols-2 gap-6">
+
+  <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+
+    <h3 className="text-xl font-bold mb-5">
+
+      Alternative Titles
+
+    </h3>
+
+    <div className="space-y-3 text-zinc-300">
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          English:
+
+        </span>{" "}
+
+        {anime.title_english || "N/A"}
+
+      </p>
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          Japanese:
+
+        </span>{" "}
+
+        {anime.title_japanese || "N/A"}
+
+      </p>
+
+    </div>
+
+  </div>
+
+  <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+
+    <h3 className="text-xl font-bold mb-5">
+
+      Statistics
+
+    </h3>
+
+    <div className="space-y-3 text-zinc-300">
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          Rank:
+
+        </span>{" "}
+
+        #{anime.rank || "N/A"}
+
+      </p>
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          Popularity:
+
+        </span>{" "}
+
+        #{anime.popularity || "N/A"}
+
+      </p>
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          Members:
+
+        </span>{" "}
+
+        {anime.members?.toLocaleString()}
+
+      </p>
+
+      <p>
+
+        <span className="text-white font-semibold">
+
+          Favorites:
+
+        </span>{" "}
+
+        {anime.favorites?.toLocaleString()}
+
+      </p>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div className="mt-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+
+  <h3 className="text-xl font-bold mb-6">
+
+    Anime Information
+
+  </h3>
+
+  <div className="grid md:grid-cols-2 gap-5 text-zinc-300">
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Type:
+
+      </span>{" "}
+
+      {anime.type || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Episodes:
+
+      </span>{" "}
+
+      {anime.episodes || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Status:
+
+      </span>{" "}
+
+      {anime.status || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Duration:
+
+      </span>{" "}
+
+      {anime.duration || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Rating:
+
+      </span>{" "}
+
+      {anime.rating || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Source:
+
+      </span>{" "}
+
+      {anime.source || "N/A"}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Season:
+
+      </span>{" "}
+
+      {anime.season || "N/A"} {anime.year || ""}
+
+    </p>
+
+    <p>
+
+      <span className="text-white font-semibold">
+
+        Studio:
+
+      </span>{" "}
+
+      {anime.studios?.[0]?.name || "N/A"}
+
+    </p>
+
+  </div>
+
+</div>
+
+<div className="mt-8 bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6">
+
+  <h3 className="text-xl font-bold mb-5">
+
+    Available At
+
+  </h3>
+
+  <div className="flex flex-wrap gap-4">
+
+    {
+
+      anime.licensors?.length > 0 ? (
+
+        anime.licensors.map((item) => (
+
+          <div
+            key={item.mal_id}
+            className="px-5 py-3 rounded-2xl bg-black/30 border border-white/10"
+          >
+
+            {item.name}
+
+          </div>
+
+        ))
+
+      ) : (
+
+        <p className="text-zinc-400">
+
+          No streaming/licensor information available.
+
+        </p>
+
+      )
+
+    }
+
+  </div>
+
+</div>
 
             </div>
 

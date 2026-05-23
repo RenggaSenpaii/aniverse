@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar"
 import ContinueWatching from "../components/ContinueWatching"
 import MotionWrapper from "../components/MotionWrapper"
 import Image from "next/image"
+import HoverTrailerCard from "../components/HoverTrailerCard"
 
 type Anime = {
   mal_id: number
@@ -121,6 +122,10 @@ export default async function Home({
       >
 
         {featuredAnime && (
+            <Link
+              href={`/anime/${featuredAnime.mal_id}`}
+              className="block"
+            >
 
           <div className="relative min-h-[700px] rounded-[40px] mb-20 overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
 
@@ -174,6 +179,7 @@ export default async function Home({
             </div>
 
           </div>
+            </Link>
 
         )}
 
