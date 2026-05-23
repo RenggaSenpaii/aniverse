@@ -74,24 +74,46 @@ async function getAnime(
 
 async function getSeasonNow() {
 
-  const res = await fetch(
-    "https://api.jikan.moe/v4/seasons/now"
-  )
+  try {
 
-  const data = await res.json()
+    const res = await fetch(
+      "https://api.jikan.moe/v4/seasons/now"
+    )
 
-  return data.data.slice(0, 5)
+    const data = await res.json()
+
+    return data?.data?.slice(0, 5) || []
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
+
 }
 
 async function getUpcomingAnime() {
 
-  const res = await fetch(
-    "https://api.jikan.moe/v4/seasons/upcoming"
-  )
+  try {
 
-  const data = await res.json()
+    const res = await fetch(
+      "https://api.jikan.moe/v4/seasons/upcoming"
+    )
 
-  return data.data.slice(0, 5)
+    const data = await res.json()
+
+    return data?.data?.slice(0, 5) || []
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
+
+  }
+
 }
 
 export default async function Home({
@@ -151,6 +173,11 @@ export default async function Home({
 
               <div className="max-w-3xl">
 
+                <Link
+                  href={`/anime/${featuredAnime.mal_id}`}
+                  className="block"
+                >
+
                 <p className="text-red-500 font-semibold tracking-[0.3em] uppercase mb-5">
 
                   Featured Anime
@@ -180,6 +207,7 @@ export default async function Home({
                   </div>
 
                 </div>
+                </Link>
 
                 <AnimeSearch />
 

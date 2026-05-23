@@ -572,9 +572,10 @@ export default async function AnimePage({
 
     {characters.map((item, index) => (
 
-      <div
+      <Link
+        href={`/character/${item.character.mal_id}?anime=${anime.mal_id}`}
         key={`${item.character.mal_id}-${index}`}
-        className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden shadow-xl shadow-black/20 hover:border-red-500 transition duration-300"
+        className="block bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden shadow-xl shadow-black/20 hover:border-red-500 hover:-translate-y-2 transition duration-300"
       >
 
         <Image
@@ -633,7 +634,7 @@ export default async function AnimePage({
 
         </div>
 
-      </div>
+      </Link>
 
     ))}
 
