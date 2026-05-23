@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { supabase } from "../lib/supabase"
+import {toast} from "sonner"
 
 export default function FavoriteButton({
   animeId,
@@ -49,7 +50,7 @@ export default function FavoriteButton({
   async function toggleFavorite() {
 
     if (!user) {
-      alert("Login first !")
+      toast.error("Login first !")
       return
     }
 

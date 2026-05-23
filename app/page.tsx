@@ -44,21 +44,32 @@ async function getAnime(
   genre?: string
 ) {
 
-  let url =
-    `https://api.jikan.moe/v4/top/anime?page=${page}`
+  try {
 
-  if (genre) {
+    let url =
+      `https://api.jikan.moe/v4/top/anime?page=${page}`
 
-    url =
-      `https://api.jikan.moe/v4/anime?genres=${genre}&page=${page}`
+    if (genre) {
+
+      url =
+        `https://api.jikan.moe/v4/anime?genres=${genre}&page=${page}`
+
+    }
+
+    const res = await fetch(url)
+
+    const data = await res.json()
+
+    return data.data || []
+
+  } catch (error) {
+
+    console.log(error)
+
+    return []
 
   }
 
-  const res = await fetch(url)
-
-  const data = await res.json()
-
-  return data.data
 }
 
 async function getSeasonNow() {
@@ -108,7 +119,7 @@ export default async function Home({
     await getUpcomingAnime()
 
   const featuredAnime =
-    animeList[0]
+    animeList?.[0]
 
   return (
 
@@ -131,7 +142,7 @@ export default async function Home({
 
             <Image
               src={featuredAnime.images.jpg.large_image_url}
-              alt={featuredAnime.title}
+              alt={featuredAnime?.title}
               className="absolute inset-0 w-full h-full object-cover rounded-3xl"
               width={1200}
               height={700}
@@ -152,13 +163,13 @@ export default async function Home({
 
                 <h2 className="text-4xl md:text-7xl font-black leading-tight mb-8 break-words">
 
-                  {featuredAnime.title}
+                  {featuredAnime?.title}
 
                 </h2>
 
                 <p className="text-zinc-300 text-base md:text-lg leading-relaxed mb-10 line-clamp-5">
 
-                  {featuredAnime.synopsis}
+                  {featuredAnime?.synopsis}
 
                 </p>
 
@@ -166,7 +177,7 @@ export default async function Home({
 
                   <div className="bg-yellow-500 text-black px-5 py-3 rounded-2xl font-bold text-lg">
 
-                    ⭐ {featuredAnime.score || "N/A"}
+                    ⭐ {featuredAnime?.score || "N/A"}
 
                   </div>
 
@@ -207,11 +218,11 @@ export default async function Home({
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-24">
 
-            {animeList.map((anime) => (
+            {animeList.map((anime, index) => (
 
               <Link
                 href={`/anime/${anime.mal_id}`}
-                key={anime.mal_id}
+                key={`${anime.mal_id}-${index}`}
                 className="group transition duration-300 hover:scale-[1.03]"
               >
 
@@ -229,7 +240,7 @@ export default async function Home({
 
                 <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
 
-                  {anime.title}
+                  {anime?.title}
 
                 </h4>
 
@@ -269,11 +280,11 @@ export default async function Home({
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 
-              {seasonNow.map((anime) => (
+              {seasonNow.map((anime, index) => (
 
                 <Link
                   href={`/anime/${anime.mal_id}`}
-                  key={anime.mal_id}
+                  key={`${anime.mal_id}-${index}`}
                   className="group transition duration-300 hover:scale-[1.03]"
                 >
 
@@ -291,7 +302,7 @@ export default async function Home({
 
                   <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
 
-                    {anime.title}
+                    {anime?.title}
 
                   </h4>
 
@@ -318,11 +329,11 @@ export default async function Home({
 
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
 
-              {upcomingAnime.map((anime) => (
+              {upcomingAnime.map((anime, index) => (
 
                 <Link
                   href={`/anime/${anime.mal_id}`}
-                  key={anime.mal_id}
+                  key={`${anime.mal_id}-${index}`}
                   className="group transition duration-300 hover:scale-[1.03]"
                 >
 
@@ -340,7 +351,7 @@ export default async function Home({
 
                   <h4 className="font-semibold line-clamp-2 mb-2 group-hover:text-red-400 transition">
 
-                    {anime.title}
+                    {anime?.title}
 
                   </h4>
 
@@ -349,6 +360,10 @@ export default async function Home({
               ))}
 
             </div>
+            </section>
+        
+        </MotionWrapper>
+
         
                 {/* Top Anime */}
 
@@ -389,7 +404,7 @@ export default async function Home({
 
                     <h4 className="text-2xl font-bold mb-3">
 
-                      {anime.title}
+                      {anime?.title}
 
                     </h4>
 
@@ -511,10 +526,6 @@ export default async function Home({
         </div>
 
           </section>
-
-        </MotionWrapper>
-
-      </section>
 
     </main>
   )
