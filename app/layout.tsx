@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import "./globals.css"
 import ScrollToTop from "../components/ScrollToTop"
 import { Toaster } from "sonner";
+import NextTopLoader from "nextjs-toploader"
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,10 @@ export default function RootLayout({
       <ScrollToTop />
         {children}
         <Toaster richColors position="top-center" />
+        <NextTopLoader
+          color="#ef4444"
+          showSpinner={false}
+        />
 
       </body>
 
