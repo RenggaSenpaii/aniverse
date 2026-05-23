@@ -133,12 +133,8 @@ export default async function Home({
       >
 
         {featuredAnime && (
-            <Link
-              href={`/anime/${featuredAnime.mal_id}`}
-              className="block"
-            >
 
-          <div className="relative min-h-[700px] rounded-[40px] mb-20 overflow-hidden border border-white/10 shadow-2xl shadow-black/50">
+          <div className="relative min-h-[700px] rounded-[40px] mb-20 overflow-visible border border-white/10 shadow-2xl shadow-black/50">
 
             <Image
               src={featuredAnime.images.jpg.large_image_url}
@@ -179,6 +175,8 @@ export default async function Home({
 
                     ⭐ {featuredAnime?.score || "N/A"}
 
+                    
+
                   </div>
 
                 </div>
@@ -190,7 +188,6 @@ export default async function Home({
             </div>
 
           </div>
-            </Link>
 
         )}
 
